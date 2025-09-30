@@ -1,0 +1,2658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | EcoQuest | Learn</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23059669'><path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/></svg>">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0e4639;
+            --primary-light: #e6f4ea;
+            --secondary: #1b7f6a;
+            --accent: #f7c948;
+            --accent-dark: #e9b949;
+            --background: #f6fff8;
+            --card-bg: #ffffff;
+            --card-shadow: 0 8px 32px rgba(30, 60, 40, 0.08);
+            --text-main: #1a2e2b;
+            --text-muted: #5a7d6c;
+            --danger: #e4572e;
+            --success: #3ec300;
+            --info: #2d9cdb;
+            --border-radius: 18px;
+            --font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            display: none;
+            background: var(--white);
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            color: var(--gray-700);
+        }
+
+        .mobile-menu-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 256px;
+            height: 100vh;
+            background: linear-gradient(120deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: var(--primary);
+            box-shadow: var(--card-shadow);
+            z-index: 50;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            flex-shrink: 0;
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .logo-text {
+            color: var(--accent);
+        }
+
+        .sidebar-content {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-avatar, .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--gray-900);
+        }
+
+        .user-school {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-item:hover {
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-dark);
+            color: var(--primary);
+        }
+
+        .logout-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Mobile Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 256px;
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-light);
+            color: var(--primary);
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .back-btn {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stats-mini {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 640px) {
+            .stats-mini {
+                display: none;
+            }
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-item svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Notifications */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .notification-btn:hover {
+            background-color: var(--gray-100);
+        }
+
+        .notification-btn svg {
+            width: 20px;
+            height: 20px;
+            color: var(--gray-600);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: var(--red-color);
+            border-radius: 50%;
+            border: 2px solid var(--white);
+        }
+
+        /* Profile Dropdown */
+        .profile-wrapper {
+            position: relative;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .profile-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-900);
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+        }
+
+        @media (max-width: 640px) {
+            .profile-name {
+                display: none;
+            }
+        }
+
+        /* Content Sections */
+        .content-section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard Styles */
+        .welcome-banner {
+            background: linear-gradient(120deg, var(--accent) 0%, var(--primary-light) 100%);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .banner-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .banner-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .banner-description {
+            max-width: 600px;
+            opacity: 0.9;
+        }
+
+        .challenge-btn {
+            background: var(--secondary);
+            color: #fff;
+            border-radius: var(--border-radius);
+        }
+
+        .challenge-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--primary-light);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .stat-icon.blue {
+            background: #d0f0fd;
+            color: var(--info);
+        }
+
+        .stat-icon.green {
+            background: #e6f4ea;
+            color: var(--primary);
+        }
+
+        .stat-icon.purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .stat-icon.yellow {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        /* Quiz Styles */
+        .filters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .filters-section {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+        }
+
+        .category-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .filter-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 16rem;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Quiz Grid */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--primary-light);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .quiz-image {
+            height: 12rem;
+            overflow: hidden;
+        }
+
+        .quiz-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .quiz-card:hover .quiz-image img {
+            transform: scale(1.05);
+        }
+
+        .quiz-content {
+            padding: 1.5rem;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .difficulty-badge {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+        }
+
+        .difficulty-badge.beginner {
+            background: #e6f4ea;
+            color: var(--primary);
+        }
+
+        .difficulty-badge.intermediate {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .difficulty-badge.advanced {
+            background: #ffe5e5;
+            color: var(--danger);
+        }
+
+        .quiz-points {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .quiz-points svg {
+            width: 1rem;
+            height: 1rem;
+            color: var(--accent-color);
+        }
+
+        .quiz-title {
+            font-size: 1.125rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .quiz-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .quiz-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .quiz-meta-item svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .start-quiz-btn {
+            width: 100%;
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .start-quiz-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        /* Lessons and Challenges Styles */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lesson-card, .challenge-card {
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--primary-light);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .lesson-card:hover, .challenge-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .content-card-image {
+            height: 10rem;
+            overflow: hidden;
+        }
+
+        .content-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .lesson-card:hover .content-card-image img, 
+        .challenge-card:hover .content-card-image img {
+            transform: scale(1.05);
+        }
+
+        .content-card-body {
+            padding: 1.5rem;
+        }
+
+        .content-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .content-status {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+        }
+
+        .status-new {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .status-in-progress {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .content-duration {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .content-duration svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .content-card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .content-card-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .content-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .content-card-category {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        .content-points {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .content-points svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .content-card-btn {
+            width: 100%;
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .content-card-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        .progress-bar-container {
+            margin-top: 1rem;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background: var(--gray-200);
+            border-radius: 9999px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 9999px;
+            transition: width 0.3s;
+        }
+
+        /* Quiz Taking Styles */
+        .quiz-taking-header {
+            background: var(--primary-light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-info h2 {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .quiz-info p {
+            color: var(--gray-600);
+        }
+
+        .quiz-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--gray-600);
+        }
+
+        .timer.warning {
+            color: var(--red-color);
+            font-weight: 600;
+        }
+
+        .timer svg {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .exit-btn {
+            color: var(--gray-600);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .exit-btn:hover {
+            color: var(--gray-800);
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--gray-900);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 1rem;
+            text-align: left;
+            border: 2px solid var(--gray-300);
+            border-radius: 0.5rem;
+            background: var(--primary-light);
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-btn.correct {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .option-btn.incorrect {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            color: var(--gray-600);
+        }
+
+        .option-letter {
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .option-check {
+            margin-left: auto;
+            color: var(--secondary-color);
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .explanation-card {
+            background: var(--accent);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .explanation-card h4 {
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation-card p {
+            color: #1e40af;
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-points {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .next-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--secondary);
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .next-btn:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        /* Results View */
+        .results-header {
+            background: linear-gradient(120deg, var(--accent) 0%, var(--primary-light) 100%);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-icon {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1rem;
+        }
+
+        .results-header h1 {
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-header p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .result-stat {
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+        }
+
+        .result-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn.primary {
+            background: var(--secondary);
+            color: #fff;
+        }
+
+        .action-btn.primary:hover {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        .action-btn.secondary {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .action-btn.secondary:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.success {
+            border-left-color: var(--success);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast.info {
+            border-left-color: var(--info);
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content-section {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .banner-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .challenge-btn {
+                align-self: stretch;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-section {
+                gap: 1rem;
+            }
+            
+            .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quiz-taking-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .quiz-controls {
+                align-self: flex-end;
+            }
+            
+            .quiz-navigation {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .results-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuButton" class="mobile-menu-btn">
+        <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-text">EcoQuest | Learning</span>
+            </div>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?w=200&h=200&fit=crop&crop=faces" alt="User" class="avatar-img">
+                </div>
+                <div class="user-info">
+                    <h4 class="user-name">Sumit </h4>
+                    <p class="user-school">PREC</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item active" data-section="dashboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                    </svg>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-section="lessons">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <span>Lessons</span>
+                </div>
+                <div class="nav-item" data-section="quizzes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                    </svg>
+                    <span>Quizzes</span>
+                </div>
+                <div class="nav-item" data-section="challenges">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"></polyline>
+                    </svg>
+                    <span>Challenges</span>
+                </div>
+                <div class="nav-item" data-section="community">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="m22 21-3-3m0 0a5 5 0 1 0-7-7 5 5 0 0 0 7 7z"></path>
+                    </svg>
+                    <span>Community</span>
+                </div>
+                <div class="nav-item" data-section="progress">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                    </svg>
+                    <span>Progress</span>
+                </div>
+                <div class="nav-item" data-section="settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="m12 1 2.09 1.26L16 2l1 1.74-1.26 2.09L17 7l-1.74 1-2.09-1.26L12 8l-1.17-1.26L9 7l-1 1.74 1.26 2.09L7 12l1.74 1 2.09-1.26L12 13l1.17 1.26L15 14l1-1.74-1.26-2.09L17 9l-1.74-1-2.09 1.26L12 8z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="backButton" class="back-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m12 19-7-7 7-7"></path>
+                            <path d="m19 12H5"></path>
+                        </svg>
+                    </button>
+                    <h1 id="pageTitle" class="page-title">Dashboard</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                            </svg>
+                            <span id="headerPoints">1,250 points</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="7"></circle>
+                                <polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"></polyline>
+                            </svg>
+                            <span>Rank #5</span>
+                        </div>
+                    </div>
+                    <div class="notification-wrapper">
+                        <button class="notification-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="m13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span id="notificationDot" class="notification-dot"></span>
+                        </button>
+                    </div>
+                    <div class="profile-wrapper">
+                        <button class="profile-btn">
+                            <span class="profile-name"> Sumit  </span>
+                            <div class="profile-avatar">
+                                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?w=200&h=200&fit=crop&crop=faces" alt="User" class="avatar-img">
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" class="content-section active">
+            <div class="welcome-banner" data-aos="fade-up">
+                <div class="banner-content">
+                    <div class="banner-text">
+                        <h2 class="banner-title">Welcome back, Sumit !</h2>
+                        <p class="banner-description">You've earned <span id="weeklyPoints">350</span> EcoPoints this week. Keep up the good work and complete today's challenge to earn more!</p>
+                    </div>
+                    <button class="challenge-btn">
+                        Today's Challenge
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-header">
+                        <div class="stat-info">
+                            <p class="stat-label">EcoPoints</p>
+                            <h3 id="totalPoints" class="stat-value">1,250</h3>
+                        </div>
+                        <div class="stat-icon blue">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-header">
+                        <div class="stat-info">
+                            <p class="stat-label">Completed Quizzes</p>
+                            <h3 id="completedQuizzes" class="stat-value">15</h3>
+                        </div>
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-header">
+                        <div class="stat-info">
+                            <p class="stat-label">Average Score</p>
+                            <h3 id="averageScore" class="stat-value">85%</h3>
+                        </div>
+                        <div class="stat-icon purple">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="7"></circle>
+                                <polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-header">
+                        <div class="stat-info">
+                            <p class="stat-label">Current Streak</p>
+                            <h3 id="currentStreak" class="stat-value">7 days</h3>
+                        </div>
+                        <div class="stat-icon yellow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lessons Content -->
+        <div id="lessonsContent" class="content-section">
+            <div class="content-grid" data-aos="fade-up">
+                <div class="lesson-card">
+                    <div class="content-card-image">
+                        <img src="https://images.pexels.com/photos/772072/pexels-photo-772072.jpeg?auto=compress&w=400" alt="Waste Segregation">
+                    </div>
+                    <div class="content-card-body">
+                        <div class="content-card-header">
+                            <span class="content-status status-new">New</span>
+                            <div class="content-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>30 min</span>
+                            </div>
+                        </div>
+                        <h3 class="content-card-title">Waste Segregation Fundamentals</h3>
+                        <p class="content-card-description">Learn how to separate wet, dry, and hazardous waste at home and school for a cleaner environment.</p>
+                        <div class="content-card-meta">
+                            <span class="content-card-category">Waste Segregation</span>
+                            <div class="content-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>80 pts</span>
+                            </div>
+                        </div>
+                        <button class="content-card-btn">Start Lesson</button>
+                    </div>
+                </div>
+
+                <div class="lesson-card">
+                    <div class="content-card-image">
+                        <img src="https://images.pexels.com/photos/3958957/pexels-photo-3958957.jpeg?auto=compress&w=400" alt="Sanitation">
+                    </div>
+                    <div class="content-card-body">
+                        <div class="content-card-header">
+                            <span class="content-status status-new">New</span>
+                            <div class="content-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>25 min</span>
+                            </div>
+                        </div>
+                        <h3 class="content-card-title">Sanitation & Hygiene</h3>
+                        <p class="content-card-description">Discover best practices for personal and community sanitation, including handwashing and safe disposal.</p>
+                        <div class="content-card-meta">
+                            <span class="content-card-category">Sanitation</span>
+                            <div class="content-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>60 pts</span>
+                            </div>
+                        </div>
+                        <button class="content-card-btn">Start Lesson</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Content -->
+        <div id="challengesContent" class="content-section">
+            <div class="content-grid" data-aos="fade-up">
+                <div class="challenge-card">
+                    <div class="content-card-image">
+                        <img src="https://images.pexels.com/photos/1303087/pexels-photo-1303087.jpeg?auto=compress&w=400" alt="Segregation Challenge">
+                    </div>
+                    <div class="content-card-body">
+                        <div class="content-card-header">
+                            <span class="content-status status-new">New</span>
+                            <div class="content-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <calendar xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </calendar>
+                                </svg>
+                                <span>7 days</span>
+                            </div>
+                        </div>
+                        <h3 class="content-card-title">7-Day Waste Segregation Challenge</h3>
+                        <p class="content-card-description">Segregate your household waste daily for a week and share your results to earn EcoPoints.</p>
+                        <div class="content-card-meta">
+                            <span class="content-card-category">Waste Segregation</span>
+                            <div class="content-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>120 pts</span>
+                            </div>
+                        </div>
+                        <button class="content-card-btn">Start Challenge</button>
+                    </div>
+                </div>
+
+                <div class="challenge-card">
+                    <div class="content-card-image">
+                        <img src="https://images.pexels.com/photos/3958957/pexels-photo-3958957.jpeg?auto=compress&w=400" alt="Sanitation Challenge">
+                    </div>
+                    <div class="content-card-body">
+                        <div class="content-card-header">
+                            <span class="content-status status-new">New</span>
+                            <div class="content-duration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span>5 days</span>
+                            </div>
+                        </div>
+                        <h3 class="content-card-title">Sanitation Hero Challenge</h3>
+                        <p class="content-card-description">Practice proper handwashing and sanitation for 5 days. Track your progress and inspire others.</p>
+                        <div class="content-card-meta">
+                            <span class="content-card-category">Sanitation</span>
+                            <div class="content-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>100 pts</span>
+                            </div>
+                        </div>
+                        <button class="content-card-btn">Start Challenge</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quizzes Content -->
+        <div id="quizzesContent" class="content-section">
+            <div class="filters-section" data-aos="fade-up" data-aos-delay="100">
+                <div class="category-filters">
+                    <button class="filter-btn active" data-category="all">All Categories</button>
+                    <button class="filter-btn" data-category="Water Conservation">Water Conservation</button>
+                    <button class="filter-btn" data-category="Renewable Energy">Renewable Energy</button>
+                    <button class="filter-btn" data-category="Waste Management">Waste Management</button>
+                    <button class="filter-btn" data-category="Climate Change">Climate Change</button>
+                    <button class="filter-btn" data-category="Biodiversity">Biodiversity</button>
+                    <button class="filter-btn" data-category="Sustainable Living">Sustainable Living</button>
+                </div>
+                
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search quizzes...">
+                </div>
+            </div>
+
+            <div id="quizGrid" class="quiz-grid" data-aos="fade-up" data-aos-delay="200">
+                <!-- Quiz cards will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Quiz Taking Content -->
+        <div id="quizTakingContent" class="content-section">
+            <div class="quiz-taking-header">
+                <div class="quiz-info">
+                    <h2 id="quizTitle">Quiz Title</h2>
+                    <p id="quizProgress">Question 1 of 5</p>
+                </div>
+                <div class="quiz-controls">
+                    <div class="timer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12,6 12,12 16,14"></polyline>
+                        </svg>
+                        <span id="timeRemaining">15:00</span>
+                    </div>
+                    <button id="exitQuiz" class="exit-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+
+            <div class="question-card">
+                <h3 id="questionText">Question will appear here</h3>
+                <div id="optionsContainer" class="options-container">
+                    <!-- Options will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div id="explanationCard" class="explanation-card hidden">
+                <h4>Explanation</h4>
+                <p id="explanationText"></p>
+            </div>
+
+            <div class="quiz-navigation">
+                <div class="question-points">
+                    Points for this question: <span id="questionPoints">10</span>
+                </div>
+                <button id="nextButton" class="next-btn hidden">
+                    <span id="nextButtonText">Next Question</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Results Content -->
+        <div id="quizResultsContent" class="content-section">
+            <div class="results-header">
+                <div class="results-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21,13.89 7,23 12,20 17,23 15.79,13.88"></polyline>
+                    </svg>
+                </div>
+                <h1>Quiz Completed!</h1>
+                <p id="performanceMessage">Great Job! 👏</p>
+                
+                <div class="results-stats">
+                    <div class="result-stat">
+                        <div class="result-value" id="finalScore">85%</div>
+                        <div class="result-label">Your Score</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-value" id="correctAnswers">4/5</div>
+                        <div class="result-label">Correct Answers</div>
+                    </div>
+                    <div class="result-stat">
+                        <div class="result-value" id="pointsEarned">120</div>
+                        <div class="result-label">Points Earned</div>
+                    </div>
+                </div>
+
+                <div class="results-actions">
+                    <button id="takeAnotherQuiz" class="action-btn primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                        </svg>
+                        <span>Take Another Quiz</span>
+                    </button>
+                    <button id="shareResults" class="action-btn secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        <span>Share Results</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Content -->
+        <div id="communityContent" class="content-section">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">👥</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--gray-600);">Community</h2>
+                <p style="color: var(--gray-500);">This section is under development.</p>
+            </div>
+        </div>
+
+        <div id="progressContent" class="content-section">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">📊</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--gray-600);">Progress</h2>
+                <p style="color: var(--gray-500);">This section is under development.</p>
+            </div>
+        </div>
+
+        <div id="settingsContent" class="content-section">
+            <div style="text-align: center; padding: 4rem 2rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;">⚙️</div>
+                <h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--gray-600);">Settings</h2>
+                <p style="color: var(--gray-500);">This section is under development.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Quiz Data
+        const quizzes = [
+            {
+                id: 'w1',
+                title: 'Waste Segregation Basics',
+                description: 'Learn how to properly separate wet, dry, and hazardous waste for a cleaner environment.',
+                category: 'Waste Segregation',
+                difficulty: 'Beginner',
+                duration: 10,
+                points: 80,
+                image: 'https://images.pexels.com/photos/772072/pexels-photo-772072.jpeg?auto=compress&w=400',
+                questions: [
+                    {
+                        id: 'w1-1',
+                        question: 'Which color bin is typically used for biodegradable (wet) waste in India?',
+                        options: ['Blue', 'Green', 'Red', 'Yellow'],
+                        correctAnswer: 1,
+                        explanation: 'Green bins are used for wet/biodegradable waste like food scraps and garden waste.',
+                        points: 8
+                    },
+                    {
+                        id: 'w1-2',
+                        question: 'Which of the following is considered hazardous waste?',
+                        options: ['Plastic bottle', 'Used battery', 'Banana peel', 'Newspaper'],
+                        correctAnswer: 1,
+                        explanation: 'Used batteries contain chemicals and should be disposed of as hazardous waste.',
+                        points: 8
+                    },
+                    {
+                        id: 'w1-3',
+                        question: 'What should you do before disposing of plastic bottles?',
+                        options: ['Wash and crush them', 'Throw as is', 'Burn them', 'Mix with food waste'],
+                        correctAnswer: 0,
+                        explanation: 'Plastic bottles should be washed and crushed before disposal to aid recycling.',
+                        points: 8
+                    },
+                    {
+                        id: 'w1-4',
+                        question: 'Which waste should go in the blue bin?',
+                        options: ['Food waste', 'Paper and cardboard', 'Medical waste', 'Garden waste'],
+                        correctAnswer: 1,
+                        explanation: 'Blue bins are for dry recyclable waste like paper, cardboard, and plastics.',
+                        points: 8
+                    },
+                    {
+                        id: 'w1-5',
+                        question: 'Why is segregation at source important?',
+                        options: [
+                            'It makes waste collection easier',
+                            'It reduces landfill pollution',
+                            'It improves recycling rates',
+                            'All of the above'
+                        ],
+                        correctAnswer: 3,
+                        explanation: 'Segregation at source helps in all these ways and is key to effective waste management.',
+                        points: 8
+                    }
+                ]
+            },
+            {
+                id: 'w2',
+                title: 'Sanitation & Hygiene Practices',
+                description: 'Test your knowledge on personal and community sanitation for a healthier life.',
+                category: 'Sanitation',
+                difficulty: 'Beginner',
+                duration: 8,
+                points: 60,
+                image: 'https://images.pexels.com/photos/3958957/pexels-photo-3958957.jpeg?auto=compress&w=400',
+                questions: [
+                    {
+                        id: 'w2-1',
+                        question: 'How long should you wash your hands with soap and water?',
+                        options: ['5 seconds', '10 seconds', '20 seconds', '1 minute'],
+                        correctAnswer: 2,
+                        explanation: 'Washing hands for at least 20 seconds removes most germs and viruses.',
+                        points: 12
+                    },
+                    {
+                        id: 'w2-2',
+                        question: 'Which is NOT a good sanitation practice?',
+                        options: [
+                            'Using a covered dustbin',
+                            'Throwing waste in open drains',
+                            'Cleaning toilets regularly',
+                            'Wearing slippers in the bathroom'
+                        ],
+                        correctAnswer: 1,
+                        explanation: 'Throwing waste in open drains causes pollution and health hazards.',
+                        points: 12
+                    },
+                    {
+                        id: 'w2-3',
+                        question: 'What is the best way to dispose of used masks and gloves?',
+                        options: [
+                            'Burn them',
+                            'Put in hazardous waste bin',
+                            'Flush down the toilet',
+                            'Mix with kitchen waste'
+                        ],
+                        correctAnswer: 1,
+                        explanation: 'Used masks and gloves should go in hazardous waste bins to prevent contamination.',
+                        points: 12
+                    },
+                    {
+                        id: 'w2-4',
+                        question: 'Which disease is commonly spread due to poor sanitation?',
+                        options: ['Malaria', 'Diarrhea', 'Asthma', 'Chickenpox'],
+                        correctAnswer: 1,
+                        explanation: 'Diarrhea is a major health issue linked to poor sanitation and contaminated water.',
+                        points: 12
+                    },
+                    {
+                        id: 'w2-5',
+                        question: 'Which of the following helps maintain community sanitation?',
+                        options: [
+                            'Open defecation',
+                            'Proper waste disposal',
+                            'Littering streets',
+                            'Ignoring public toilets'
+                        ],
+                        correctAnswer: 1,
+                        explanation: 'Proper waste disposal is essential for community cleanliness and health.',
+                        points: 12
+                    }
+                ]
+            }
+        ];
+
+        // Application State
+        let currentSection = 'dashboard';
+        let currentQuiz = null;
+        let currentQuestionIndex = 0;
+        let selectedAnswers = {};
+        let timeRemaining = 0;
+        let timerInterval = null;
+        let isAnswered = false;
+        let userStats = {
+            totalPoints: 1250,
+            completedQuizzes: 15,
+            averageScore: 85,
+            currentStreak: 7,
+            rank: 5
+        };
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            setupEventListeners();
+            updateStats();
+            renderQuizGrid();
+            
+            // Initialize AOS
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    easing: 'ease-in-out',
+                    once: true
+                });
+            }
+        });
+
+        function initializeApp() {
+            showSection('dashboard');
+        }
+
+        function setupEventListeners() {
+            // Mobile menu
+            document.getElementById('mobileMenuButton').addEventListener('click', toggleSidebar);
+            
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const section = item.dataset.section;
+                    showSection(section);
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        document.getElementById('sidebar').classList.remove('active');
+                        toggleMobileMenuIcon();
+                    }
+                });
+            });
+
+            // Back button
+            document.getElementById('backButton').addEventListener('click', () => {
+                if (currentSection === 'quiz-taking' || currentSection === 'quiz-results') {
+                    showSection('quizzes');
+                } else {
+                    showSection('dashboard');
+                }
+            });
+            
+            // Search and filters
+            document.getElementById('searchInput')?.addEventListener('input', handleSearch);
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleCategoryFilter);
+            });
+            
+            // Quiz controls
+            document.getElementById('exitQuiz')?.addEventListener('click', () => showSection('quizzes'));
+            document.getElementById('nextButton')?.addEventListener('click', handleNextQuestion);
+            
+            // Results actions
+            document.getElementById('takeAnotherQuiz')?.addEventListener('click', () => showSection('quizzes'));
+            document.getElementById('shareResults')?.addEventListener('click', shareResults);
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                const sidebar = document.getElementById('sidebar');
+                const mobileMenuBtn = document.getElementById('mobileMenuButton');
+                
+                if (window.innerWidth <= 768 && 
+                    sidebar.classList.contains('active') && 
+                    !sidebar.contains(e.target) && 
+                    !mobileMenuBtn.contains(e.target)) {
+                    toggleSidebar();
+                }
+            });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+            toggleMobileMenuIcon();
+        }
+
+        function toggleMobileMenuIcon() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const closeIcon = document.querySelector('.close-icon');
+            
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        function showSection(sectionName) {
+            currentSection = sectionName;
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionName || 
+                    (sectionName.startsWith('quiz') && item.dataset.section === 'quizzes')) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Show selected section
+            let targetSection;
+            switch(sectionName) {
+                case 'dashboard':
+                    targetSection = document.getElementById('dashboardContent');
+                    break;
+                case 'quizzes':
+                    targetSection = document.getElementById('quizzesContent');
+                    break;
+                case 'quiz-taking':
+                    targetSection = document.getElementById('quizTakingContent');
+                    break;
+                case 'quiz-results':
+                    targetSection = document.getElementById('quizResultsContent');
+                    break;
+                default:
+                   
+                    targetSection = document.getElementById(sectionName + 'Content');
+            }
+            
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update header
+            updateHeader(sectionName);
+        }
+
+        function updateHeader(sectionName) {
+            const backButton = document.getElementById('backButton');
+            const pageTitle = document.getElementById('pageTitle');
+            
+            const titles = {
+                dashboard: 'Dashboard',
+                lessons: 'Lessons',
+                quizzes: 'Quizzes',
+                'quiz-taking': currentQuiz ? currentQuiz.title : 'Quiz',
+                'quiz-results': 'Quiz Results',
+                challenges: 'Challenges',
+                community: 'Community',
+                progress: 'Progress',
+                settings: 'Settings'
+            };
+            
+            pageTitle.textContent = titles[sectionName] || 'Dashboard';
+            
+            // Show/hide back button
+            if (sectionName === 'quiz-taking' || sectionName === 'quiz-results') {
+                backButton.style.display = 'block';
+            } else {
+                backButton.style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalPoints').textContent = userStats.totalPoints.toLocaleString();
+            document.getElementById('completedQuizzes').textContent = userStats.completedQuizzes;
+            document.getElementById('averageScore').textContent = userStats.averageScore + '%';
+            document.getElementById('currentStreak').textContent = userStats.currentStreak + ' days';
+            document.getElementById('headerPoints').textContent = userStats.totalPoints.toLocaleString() + ' points';
+        }
+
+        function renderQuizGrid(filteredQuizzes = quizzes) {
+            const grid = document.getElementById('quizGrid');
+            
+            if (filteredQuizzes.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;">🔍</div>
+                        <p style="color: var(--gray-500);">No quizzes found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = filteredQuizzes.map(quiz => `
+                <div class="quiz-card" onclick="startQuiz('${quiz.id}')">
+                    <div class="quiz-image">
+                        <img src="${quiz.image}" alt="${quiz.title}">
+                    </div>
+                    <div class="quiz-content">
+                        <div class="quiz-header">
+                            <span class="difficulty-badge ${quiz.difficulty.toLowerCase()}">${quiz.difficulty}</span>
+                            <div class="quiz-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>${quiz.points} pts</span>
+                            </div>
+                        </div>
+                        <h3 class="quiz-title">${quiz.title}</h3>
+                        <p class="quiz-description">${quiz.description}</p>
+                        <div class="quiz-meta">
+                            <div class="quiz-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>${quiz.duration} min</span>
+                            </div>
+                            <div class="quiz-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>${quiz.questions.length} questions</span>
+                            </div>
+                        </div>
+                        <button class="start-quiz-btn">Start Quiz</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const activeCategory = document.querySelector('.filter-btn.active').dataset.category;
+            
+            const filtered = quizzes.filter(quiz => {
+                const matchesCategory = activeCategory === 'all' || quiz.category === activeCategory;
+                const matchesSearch = quiz.title.toLowerCase().includes(searchTerm) ||
+                                     quiz.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+            
+            renderQuizGrid(filtered);
+        }
+
+        function handleCategoryFilter(e) {
+            // Update active filter
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+            
+            // Filter quizzes
+            handleSearch();
+        }
+
+        function startQuiz(quizId) {
+            currentQuiz = quizzes.find(q => q.id === quizId);
+            if (!currentQuiz) return;
+            
+            currentQuestionIndex = 0;
+            selectedAnswers = {};
+            timeRemaining = currentQuiz.duration * 60;
+            isAnswered = false;
+            
+            showSection('quiz-taking');
+            setupQuizTimer();
+            displayQuestion();
+        }
+
+        function setupQuizTimer() {
+            const timerElement = document.getElementById('timeRemaining');
+            
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    
+                    // Warning when less than 5 minutes
+                    if (timeRemaining < 300) {
+                        timerElement.classList.add('warning');
+                    }
+                } else {
+                    completeQuiz();
+                }
+            }, 1000);
+            
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timeRemaining').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function displayQuestion() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex) / currentQuiz.questions.length) * 100;
+            
+            // Update progress
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('quizProgress').textContent = 
+                `Question ${currentQuestionIndex + 1} of ${currentQuiz.questions.length}`;
+            
+            // Update question
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionPoints').textContent = question.points;
+            
+            // Update options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = question.options.map((option, index) => `
+                <button class="option-btn" onclick="selectAnswer(${index})">
+                    <span class="option-letter">${String.fromCharCode(65 + index)}</span>
+                    <span>${option}</span>
+                </button>
+            `).join('');
+            
+            // Hide explanation and next button
+            document.getElementById('explanationCard').classList.add('hidden');
+            document.getElementById('nextButton').classList.add('hidden');
+            
+            // Check if already answered
+            isAnswered = selectedAnswers[currentQuestionIndex] !== undefined;
+            if (isAnswered) {
+                showAnswerFeedback();
+            }
+        }
+
+        function selectAnswer(answerIndex) {
+            if (isAnswered) return;
+            
+            const question = currentQuiz.questions[currentQuestionIndex];
+            selectedAnswers[currentQuestionIndex] = answerIndex;
+            isAnswered = true;
+            
+            showAnswerFeedback();
+        }
+
+        function showAnswerFeedback() {
+            const question = currentQuiz.questions[currentQuestionIndex];
+            const selectedAnswer = selectedAnswers[currentQuestionIndex];
+            const correctAnswer = question.correctAnswer;
+            
+            // Update option buttons
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach((btn, index) => {
+                btn.classList.add('disabled');
+                
+                if (index === correctAnswer) {
+                    btn.classList.add('correct');
+                    btn.innerHTML += `<svg class="option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22,4 12,14.01 9,11.01"></polyline>
+                    </svg>`;
+                } else if (index === selectedAnswer && index !== correctAnswer) {
+                    btn.classList.add('incorrect');
+                }
+            });
+            
+            // Show explanation
+            document.getElementById('explanationText').textContent = question.explanation;
+            document.getElementById('explanationCard').classList.remove('hidden');
+            
+            // Show next button
+            const nextButton = document.getElementById('nextButton');
+            const nextButtonText = document.getElementById('nextButtonText');
+            
+            if (currentQuestionIndex === currentQuiz.questions.length - 1) {
+                nextButtonText.textContent = 'Finish Quiz';
+            } else {
+                nextButtonText.textContent = 'Next Question';
+            }
+            
+            nextButton.classList.remove('hidden');
+        }
+
+        function handleNextQuestion() {
+            if (currentQuestionIndex < currentQuiz.questions.length - 1) {
+                currentQuestionIndex++;
+                isAnswered = selectedAnswers[currentQuestionIndex] !== undefined;
+                displayQuestion();
+            } else {
+                completeQuiz();
+            }
+        }
+
+        function completeQuiz() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            const correctAnswers = currentQuiz.questions.reduce((count, question, index) => {
+                return selectedAnswers[index] === question.correctAnswer ? count + 1 : count;
+            }, 0);
+            
+            const score = (correctAnswers / currentQuiz.questions.length) * 100;
+            const pointsEarned = Math.round((score / 100) * currentQuiz.points);
+            const timeTaken = (currentQuiz.duration * 60) - timeRemaining;
+            
+            const result = {
+                quizId: currentQuiz.id,
+                score,
+                totalQuestions: currentQuiz.questions.length,
+                correctAnswers,
+                timeTaken,
+                pointsEarned,
+                completedAt: new Date()
+            };
+            
+            // Update user stats
+            userStats.totalPoints += pointsEarned;
+            userStats.completedQuizzes += 1;
+            updateStats();
+            
+            showResults(result);
+        }
+
+        function showResults(result) {
+            showSection('quiz-results');
+            
+            // Performance message
+            let performanceMessage = '';
+            if (result.score >= 90) performanceMessage = "Outstanding Performance! 🎉";
+            else if (result.score >= 80) performanceMessage = "Great Job! 👏";
+            else if (result.score >= 70) performanceMessage = "Good Work! 👍";
+            else if (result.score >= 60) performanceMessage = "Keep Practicing! 📚";
+            else performanceMessage = "Need More Practice 💪";
+            
+            document.getElementById('performanceMessage').textContent = performanceMessage;
+            
+            // Results stats
+            document.getElementById('finalScore').textContent = Math.round(result.score) + '%';
+            document.getElementById('correctAnswers').textContent = `${result.correctAnswers}/${result.totalQuestions}`;
+            document.getElementById('pointsEarned').textContent = result.pointsEarned;
+            
+            showToast('Quiz Completed!', `You earned ${result.pointsEarned} EcoPoints!`, 'success');
+        }
+
+        function shareResults() {
+            const score = document.getElementById('finalScore').textContent;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'EcoQuest Quiz Results',
+                    text: `I just completed a quiz on EcoQuest and scored ${score}!`,
+                    url: window.location.href
+                });
+            } else {
+                const text = `I just completed a quiz on EcoQuest and scored ${score}!`;
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Results copied!', 'Quiz results copied to clipboard', 'info');
+                });
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                showToast('Logged out', 'You have been successfully logged out.', 'info');
+                setTimeout(() => {
+                    window.top.location.href = 'index.html';
+                    location.reload();
+                }, 1500);
+            }
+        }
+
+        function showToast(title, message, type = 'info') {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            toast.innerHTML = `
+                <div class="toast-title">${title}</div>
+                ${message ? `<div class="toast-message">${message}</div>` : ''}
+            `;
+
+            toastContainer.appendChild(toast);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (toastContainer.contains(toast)) {
+                        toastContainer.removeChild(toast);
+                    }
+                }, 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+<script>
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const section = item.dataset.section;
+                    showSection(section);
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        document.getElementById('sidebar').classList.remove('active');
+                        toggleMobileMenuIcon();
+                    }
+                });
+            });
+
+            // Back button
+            document.getElementById('backButton').addEventListener('click', () => {
+                if (currentSection === 'quiz-taking' || currentSection === 'quiz-results') {
+                    showSection('quizzes');
+                } else {
+                    showSection('dashboard');
+                }
+            });
+            
+            // Search and filters
+            document.getElementById('searchInput')?.addEventListener('input', handleSearch);
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', handleCategoryFilter);
+            });
+            
+            // Quiz controls
+            document.getElementById('exitQuiz')?.addEventListener('click', () => showSection('quizzes'));
+            document.getElementById('nextButton')?.addEventListener('click', handleNextQuestion);
+            
+            // Results actions
+            document.getElementById('takeAnotherQuiz')?.addEventListener('click', () => showSection('quizzes'));
+            document.getElementById('shareResults')?.addEventListener('click', shareResults);
+            
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                const sidebar = document.getElementById('sidebar');
+                const mobileMenuBtn = document.getElementById('mobileMenuButton');
+                
+                if (window.innerWidth <= 768 && 
+                    sidebar.classList.contains('active') && 
+                    !sidebar.contains(e.target) && 
+                    !mobileMenuBtn.contains(e.target)) {
+                    toggleSidebar();
+                }
+            });
+        
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+            toggleMobileMenuIcon();
+        }
+
+        function toggleMobileMenuIcon() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const closeIcon = document.querySelector('.close-icon');
+            
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        }
+
+        function showSection(sectionName) {
+            currentSection = sectionName;
+            
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.section === sectionName || 
+                    (sectionName.startsWith('quiz') && item.dataset.section === 'quizzes')) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Show selected section
+            let targetSection;
+            switch(sectionName) {
+                case 'dashboard':
+                    targetSection = document.getElementById('dashboardContent');
+                    break;
+                case 'quizzes':
+                    targetSection = document.getElementById('quizzesContent');
+                    break;
+                case 'quiz-taking':
+                    targetSection = document.getElementById('quizTakingContent');
+                    break;
+                case 'quiz-results':
+                    targetSection = document.getElementById('quizResultsContent');
+                    break;
+                default:
+                    targetSection = document.getElementById(sectionName + 'Content');
+            }
+            
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update header
+            updateHeader(sectionName);
+        }
+
+        function updateHeader(sectionName) {
+            const backButton = document.getElementById('backButton');
+            const pageTitle = document.getElementById('pageTitle');
+            
+            const titles = {
+                dashboard: 'Dashboard',
+                lessons: 'Lessons',
+                quizzes: 'Quizzes',
+                'quiz-taking': currentQuiz ? currentQuiz.title : 'Quiz',
+                'quiz-results': 'Quiz Results',
+                challenges: 'Challenges',
+                community: 'Community',
+                progress: 'Progress',
+                settings: 'Settings'
+            };
+            
+            pageTitle.textContent = titles[sectionName] || 'Dashboard';
+            
+            // Show/hide back button
+            if (sectionName === 'quiz-taking' || sectionName === 'quiz-results') {
+                backButton.style.display = 'block';
+            } else {
+                backButton.style.display = 'none';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalPoints').textContent = userStats.totalPoints.toLocaleString();
+            document.getElementById('completedQuizzes').textContent = userStats.completedQuizzes;
+            document.getElementById('averageScore').textContent = userStats.averageScore + '%';
+            document.getElementById('currentStreak').textContent = userStats.currentStreak + ' days';
+            document.getElementById('headerPoints').textContent = userStats.totalPoints.toLocaleString() + ' points';
+        }
+
+        function renderQuizGrid(filteredQuizzes = quizzes) {
+            const grid = document.getElementById('quizGrid');
+            
+            if (filteredQuizzes.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;">🔍</div>
+                        <p style="color: var(--gray-500);">No quizzes found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+        }
+            
+            grid.innerHTML = filteredQuizzes.map(quiz => 
+                <div class="quiz-card" onclick="startQuiz('${quiz.id}')">
+                    <div class="quiz-image">
+                        <img src="${quiz.image}" alt="${quiz.title}"/>
+                    </div>
+                    <div class="quiz-content">
+                        <div class="quiz-header">
+                            <span class="difficulty-badge ${quiz.difficulty.toLowerCase()}">${quiz.difficulty}</span>
+                            <div class="quiz-points">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26 12,2"></polygon>
+                                </svg>
+                                <span>${quiz.points} pts</span>
+                            </div>
+                        </div>
+                        <h3 class="quiz-title">${quiz.title}</h3>
+                        <p class="quiz-description">${quiz.description}</p>
+                        <div class="quiz-meta">
+                            <div class="quiz-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12,6 12,12 16,14"></polyline>
+                                </svg>
+                                <span>${quiz.duration} min</span>
+                            </div>
+                            <div class="quiz-meta-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <span>${quiz.questions.length} questions</span>
+                            </div>
+                        </div>
+                        <button class="start-quiz-btn">Start Quiz</button>
+                    </div>
+                </div>
+            )
+    </script>
+</body>
+</html>
+         
+    </script>
+</body>
+</html>

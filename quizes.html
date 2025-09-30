@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoQuest Quiz Platform</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+<style>
+:root {
+    --primary: #0e4639;
+    --primary-light: #e6f4ea;
+    --secondary: #1b7f6a;
+    --accent: #f7c948;
+    --accent-dark: #e9b949;
+    --background: #f6fff8;
+    --card-bg: #ffffff;
+    --card-shadow: 0 8px 32px rgba(30, 60, 40, 0.08);
+    --text-main: #1a2e2b;
+    --text-muted: #5a7d6c;
+    --danger: #e4572e;
+    --success: #3ec300;
+    --info: #2d9cdb;
+    --border-radius: 18px;
+    --font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+}
+body {
+    background: var(--background);
+    color: var(--text-main);
+    font-family: var(--font-family);
+}
+.sidebar {
+    background: linear-gradient(120deg, var(--primary-light) 0%, var(--primary) 100%);
+    color: var(--primary);
+    box-shadow: var(--card-shadow);
+}
+.sidebar-header {
+    background: var(--primary);
+    color: #fff;
+}
+.logo-text {
+    color: var(--accent);
+}
+.user-profile {
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.nav-item {
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.nav-item.active {
+    background: var(--accent);
+    color: var(--primary);
+}
+.logout-btn {
+    background: var(--danger);
+    color: #fff;
+    border-radius: var(--border-radius);
+}
+.logout-btn:hover {
+    background: var(--accent-dark);
+    color: var(--primary);
+}
+.main-content {
+    background: var(--background);
+}
+.header {
+    background: var(--primary-light);
+    color: var(--primary);
+    box-shadow: var(--card-shadow);
+}
+#pageTitle {
+    color: var(--primary);
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.stat-card.blue { background: linear-gradient(135deg, #1b7f6a, #0e4639); color: #fff; }
+.stat-card.green { background: linear-gradient(135deg, #3ec300, #1b7f6a); color: #fff; }
+.stat-card.purple { background: linear-gradient(135deg, #f3e8ff, #7c3aed); color: #7c3aed; }
+.stat-card.orange { background: linear-gradient(135deg, #f7c948, #e9b949); color: #0e4639; }
+.filter-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.filter-btn.active {
+    background: var(--accent);
+    color: var(--primary);
+}
+.quiz-card {
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-light);
+}
+.difficulty-badge.beginner { background: #e6f4ea; color: var(--primary); }
+.difficulty-badge.intermediate { background: var(--accent); color: var(--primary); }
+.difficulty-badge.advanced { background: #ffe5e5; color: var(--danger); }
+.start-quiz-btn {
+    background: var(--secondary);
+    color: #fff;
+    border-radius: var(--border-radius);
+}
+.start-quiz-btn:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+.quiz-header {
+    background: var(--primary-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+.option-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.option-btn.correct {
+    background: var(--success);
+    color: #fff;
+}
+.option-btn.incorrect {
+    background: var(--danger);
+    color: #fff;
+}
+.explanation-card {
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.next-btn {
+    background: var(--secondary);
+    color: #fff;
+    border-radius: var(--border-radius);
+}
+.next-btn:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+.results-header {
+    background: linear-gradient(120deg, var(--accent) 0%, var(--primary-light) 100%);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+}
+.action-btn.primary {
+    background: var(--secondary);
+    color: #fff;
+    border-radius: var(--border-radius);
+}
+.action-btn.primary:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+.action-btn.secondary {
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+.action-btn.secondary:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f9fafb;
+    color: #111827;
+    line-height: 1.6;
+}
+
+/* Utility Classes */
+.bg-gray-50 { background-color: #f9fafb; }
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 50;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 16rem;
+    height: 100vh;
+    background: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    z-index: 40;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4rem;
+    padding: 0 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    width: 2rem;
+    height: 2rem;
+    background: #dcfce7;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #16a34a;
+}
+
+.logo-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.close-sidebar {
+    background: none;
+    border: none;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .close-sidebar {
+        display: block;
+    }
+}
+
+.close-sidebar:hover {
+    background: #f3f4f6;
+}
+
+.sidebar-content {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #dbeafe;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.user-avatar {
+    width: 3rem;
+    height: 3rem;
+    background: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+.user-info h4 {
+    font-weight: 500;
+    color: #111827;
+}
+
+.user-info p {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: #6b7280;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-item:hover {
+    background: #f3f4f6;
+}
+
+.nav-item.active {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.sidebar-footer {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: #f3f4f6;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 16rem;
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* Header */
+.header {
+    background: var(--primary-light);
+    color: var(--primary);
+    box-shadow: var(--card-shadow);
+}
+
+.header-content {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.back-btn {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: #f3f4f6;
+}
+
+#pageTitle {
+    color: var(--primary);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stats-mini {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+@media (max-width: 640px) {
+    .stats-mini {
+        display: none;
+    }
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.stat-item i {
+    width: 1rem;
+    height: 1rem;
+}
+
+.notification-btn {
+    position: relative;
+    padding: 0.5rem;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-btn:hover {
+    background: #f3f4f6;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #ef4444;
+    border-radius: 50%;
+}
+
+.profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.profile-btn:hover {
+    background: #f9fafb;
+}
+
+.profile-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .profile-name {
+        display: none;
+    }
+}
+
+.profile-avatar {
+    width: 2rem;
+    height: 2rem;
+    background: #dbeafe;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* Content */
+.content {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+/* Views */
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--gradient-from), var(--gradient-to));
+    color: white;
+}
+
+.stat-card.blue {
+    --gradient-from: #3b82f6;
+    --gradient-to: #2563eb;
+}
+
+.stat-card.green {
+    --gradient-from: #10b981;
+    --gradient-to: #059669;
+}
+
+.stat-card.purple {
+    --gradient-from: #8b5cf6;
+    --gradient-to: #7c3aed;
+}
+
+.stat-card.orange {
+    --gradient-from: #f59e0b;
+    --gradient-to: #d97706;
+}
+
+.stat-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.stat-icon {
+    width: 2rem;
+    height: 2rem;
+    opacity: 0.8;
+}
+
+/* Filters Section */
+.filters-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .filters-section {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.filter-btn:hover {
+    background: #e5e7eb;
+}
+
+.filter-btn.active {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 16rem;
+}
+
+.search-box i {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    width: 1rem;
+    height: 1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Quiz Grid */
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.quiz-card {
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary-light);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.quiz-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-image {
+    height: 12rem;
+    overflow: hidden;
+}
+
+.quiz-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.quiz-card:hover .quiz-image img {
+    transform: scale(1.05);
+}
+
+.quiz-content {
+    padding: 1.5rem;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.difficulty-badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 9999px;
+}
+
+.difficulty-badge.beginner {
+    background: #e6f4ea;
+    color: var(--primary);
+}
+
+.difficulty-badge.intermediate {
+    background: var(--accent);
+    color: var(--primary);
+}
+
+.difficulty-badge.advanced {
+    background: #ffe5e5;
+    color: var(--danger);
+}
+
+.quiz-points {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.quiz-points i {
+    width: 1rem;
+    height: 1rem;
+    color: #fbbf24;
+}
+
+.quiz-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #111827;
+}
+
+.quiz-description {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.quiz-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.quiz-meta-item i {
+    width: 1rem;
+    height: 1rem;
+}
+
+.start-quiz-btn {
+    width: 100%;
+    background: var(--secondary);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.start-quiz-btn:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+
+/* Quiz View */
+.quiz-header {
+    background: var(--primary-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.quiz-header .quiz-info h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 0.25rem;
+}
+
+.quiz-header .quiz-info p {
+    color: #6b7280;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.quiz-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.875rem;
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #6b7280;
+}
+
+.timer.warning {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+.timer i {
+    width: 1rem;
+    height: 1rem;
+}
+
+.exit-btn {
+    color: #6b7280;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.exit-btn:hover {
+    color: #374151;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 0.5rem;
+    background: #e5e7eb;
+    border-radius: 9999px;
+    margin-bottom: 1.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 9999px;
+    transition: width 0.3s;
+}
+
+.question-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.question-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #111827;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.option-btn {
+    width: 100%;
+    padding: 1rem;
+    text-align: left;
+    border: 2px solid #d1d5db;
+    border-radius: 0.5rem;
+    background: var(--primary-light);
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.option-btn:hover:not(.disabled) {
+    border-color: #3b82f6;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.option-btn.correct {
+    background: var(--success);
+    color: #fff;
+}
+
+.option-btn.incorrect {
+    background: var(--danger);
+    color: #fff;
+}
+
+.option-btn.disabled {
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+.option-letter {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.option-check {
+    margin-left: auto;
+    color: #10b981;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.explanation-card {
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.explanation-card h4 {
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 0.5rem;
+}
+
+.explanation-card p {
+    color: #1e40af;
+}
+
+.quiz-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question-points {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.next-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--secondary);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.next-btn:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+
+.next-btn i {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Results View */
+.results-header {
+    background: linear-gradient(120deg, #f7c948 0%, #e6f4ea 100%);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.results-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1rem;
+}
+
+.results-header h1 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.results-header p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.results-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1.5rem;
+}
+
+.result-stat {
+    text-align: center;
+}
+
+.result-value {
+    font-size: 1.875rem;
+    font-weight: bold;
+}
+
+.result-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+.detailed-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.detail-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-label {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.detail-value {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.detail-icon {
+    width: 2rem;
+    height: 2rem;
+    color: #6b7280;
+}
+
+.badge-achievement {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.badge-achievement h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.badge-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.badge-icon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.badge-info h4 {
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin-bottom: 0.25rem;
+}
+
+.badge-info p {
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.badge-points {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #dcfce7;
+    color: #166534;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.performance-analysis {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.performance-analysis h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.analysis-item {
+    margin-bottom: 1rem;
+}
+
+.analysis-item:last-child {
+    margin-bottom: 0;
+}
+
+.analysis-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.analysis-bar {
+    width: 100%;
+    height: 0.5rem;
+    background: #e5e7eb;
+    border-radius: 9999px;
+}
+
+.analysis-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.5s;
+}
+
+.analysis-fill.green {
+    background: #10b981;
+}
+
+.results-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (min-width: 640px) {
+    .results-actions {
+        flex-direction: row;
+    }
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn.primary {
+    background: var(--secondary);
+    color: #fff;
+    border-radius: var(--border-radius);
+}
+
+.action-btn.primary:hover {
+    background: var(--primary);
+    color: var(--accent);
+}
+
+.action-btn.secondary {
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: var(--border-radius);
+}
+
+.action-btn.secondary:hover {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .content {
+        padding: 1rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quiz-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-section {
+        gap: 1rem;
+    }
+    
+    .category-filters {
+        justify-content: flex-start;
+    }
+    
+    .quiz-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .quiz-controls {
+        align-self: flex-end;
+    }
+    
+    .quiz-navigation {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .results-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+    
+    .detailed-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .badge-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}</style>
+</head>
+<body class="bg-gray-50">
+    <!-- Mobile Menu Button -->
+    <button id="mobileMenuButton" class="mobile-menu-btn">
+        <i data-feather="menu"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <!-- Header -->
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <div class="logo-icon">
+                    <i data-feather="leaf"></i>
+                </div>
+                <span class="logo-text">EcoQuest</span>
+            </div>
+            <button id="closeSidebar" class="close-sidebar">
+                <i data-feather="x"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <span>KA</span>
+                </div>
+                <div class="user-info">
+                    <h4>Kamran Alvi</h4>
+                    <p>Class 9, Delhi Public School</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item">
+                    <i data-feather="home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-feather="book-open"></i>
+                    <span>Lessons</span>
+                </a>
+                <a href="#" class="nav-item active">
+                    <i data-feather="check-circle"></i>
+                    <span>Quizzes</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-feather="award"></i>
+                    <span>Challenges</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-feather="users"></i>
+                    <span>Community</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-feather="trending-up"></i>
+                    <span>Progress</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-feather="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <button class="logout-btn">
+                    <i data-feather="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="backButton" class="back-btn" style="display: none;">
+                        <i data-feather="arrow-left"></i>
+                    </button>
+                    <h1 id="pageTitle">Quiz Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="stats-mini">
+                        <div class="stat-item">
+                            <i data-feather="star"></i>
+                            <span id="headerPoints">1250 points</span>
+                        </div>
+                        <div class="stat-item">
+                            <i data-feather="trophy"></i>
+                            <span>Rank #5</span>
+                        </div>
+                    </div>
+                    <button class="notification-btn">
+                        <i data-feather="bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="profile-btn">
+                        <span class="profile-name">Kamran Alvi</span>
+                        <div class="profile-avatar">
+                            <span>KA</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+            <!-- Dashboard View -->
+            <div id="dashboardView" class="view active">
+                <!-- Stats Overview -->
+                <div class="stats-grid" data-aos="fade-up">
+                    <div class="stat-card blue">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p class="stat-label">Total Points</p>
+                                <p class="stat-value" id="totalPoints">1,250</p>
+                            </div>
+                            <div class="stat-icon">
+                                <i data-feather="star"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card green">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p class="stat-label">Completed Quizzes</p>
+                                <p class="stat-value" id="completedQuizzes">15</p>
+                            </div>
+                            <div class="stat-icon">
+                                <i data-feather="check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card purple">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p class="stat-label">Average Score</p>
+                                <p class="stat-value" id="averageScore">85%</p>
+                            </div>
+                            <div class="stat-icon">
+                                <i data-feather="award"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card orange">
+                        <div class="stat-content">
+                            <div class="stat-info">
+                                <p class="stat-label">Current Streak</p>
+                                <p class="stat-value" id="currentStreak">7 days</p>
+                            </div>
+                            <div class="stat-icon">
+                                <i data-feather="trophy"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters and Search -->
+                <div class="filters-section" data-aos="fade-up" data-aos-delay="100">
+                    <div class="category-filters">
+                        <button class="filter-btn active" data-category="all">All Categories</button>
+                        <button class="filter-btn" data-category="Water Conservation">Water Conservation</button>
+                        <button class="filter-btn" data-category="Renewable Energy">Renewable Energy</button>
+                        <button class="filter-btn" data-category="Waste Management">Waste Management</button>
+                        <button class="filter-btn" data-category="Climate Change">Climate Change</button>
+                        <button class="filter-btn" data-category="Biodiversity">Biodiversity</button>
+                        <button class="filter-btn" data-category="Sustainable Living">Sustainable Living</button>
+                    </div>
+                    
+                    <div class="search-box">
+                        <i data-feather="search"></i>
+                        <input type="text" id="searchInput" placeholder="Search quizzes...">
+                    </div>
+                </div>
+
+                <!-- Quiz Grid -->
+                <div id="quizGrid" class="quiz-grid" data-aos="fade-up" data-aos-delay="200">
+                    <!-- Quiz cards will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Quiz View -->
+            <div id="quizView" class="view">
+                <!-- Quiz Header -->
+                <div class="quiz-header">
+                    <div class="quiz-info">
+                        <h2 id="quizTitle">Quiz Title</h2>
+                        <p id="quizProgress">Question 1 of 5</p>
+                    </div>
+                    <div class="quiz-controls">
+                        <div class="timer">
+                            <i data-feather="clock"></i>
+                            <span id="timeRemaining">15:00</span>
+                        </div>
+                        <button id="exitQuiz" class="exit-btn">
+                            <i data-feather="x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+
+                <!-- Question -->
+                <div class="question-card">
+                    <h3 id="questionText">Question will appear here</h3>
+                    <div id="optionsContainer" class="options-container">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <div id="explanationCard" class="explanation-card" style="display: none;">
+                    <h4>Explanation</h4>
+                    <p id="explanationText"></p>
+                </div>
+
+                <!-- Navigation -->
+                <div class="quiz-navigation">
+                    <div class="question-points">
+                        Points for this question: <span id="questionPoints">10</span>
+                    </div>
+                    <button id="nextButton" class="next-btn" style="display: none;">
+                        <span id="nextButtonText">Next Question</span>
+                        <i data-feather="arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div id="resultsView" class="view">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <div class="results-icon">
+                        <i data-feather="trophy"></i>
+                    </div>
+                    <h1>Quiz Completed!</h1>
+                    <p id="performanceMessage">Great Job! 👏</p>
+                    
+                    <div class="results-stats">
+                        <div class="result-stat">
+                            <div class="result-value" id="finalScore">85%</div>
+                            <div class="result-label">Your Score</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-value" id="correctAnswers">4/5</div>
+                            <div class="result-label">Correct Answers</div>
+                        </div>
+                        <div class="result-stat">
+                            <div class="result-value" id="pointsEarned">120</div>
+                            <div class="result-label">Points Earned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Stats -->
+                <div class="detailed-stats">
+                    <div class="detail-card">
+                        <div class="detail-content">
+                            <div class="detail-info">
+                                <p class="detail-label">Time Taken</p>
+                                <p class="detail-value" id="timeTaken">12:30</p>
+                            </div>
+                            <div class="detail-icon">
+                                <i data-feather="clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-content">
+                            <div class="detail-info">
+                                <p class="detail-label">Accuracy</p>
+                                <p class="detail-value" id="accuracy">80%</p>
+                            </div>
+                            <div class="detail-icon">
+                                <i data-feather="check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-card">
+                        <div class="detail-content">
+                            <div class="detail-info">
+                                <p class="detail-label">Grade</p>
+                                <p class="detail-value" id="grade">B</p>
+                            </div>
+                            <div class="detail-icon">
+                                <i data-feather="award"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badge Achievement -->
+                <div class="badge-achievement">
+                    <h3>Achievement Unlocked!</h3>
+                    <div class="badge-content">
+                        <div class="badge-icon" id="badgeIcon">🎯</div>
+                        <div class="badge-info">
+                            <h4 id="badgeName">Great Job</h4>
+                            <p>You've earned a new badge for your performance!</p>
+                            <span class="badge-points" id="badgePoints">+120 EcoPoints</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Analysis -->
+                <div class="performance-analysis">
+                    <h3>Performance Analysis</h3>
+                    <div class="analysis-item">
+                        <div class="analysis-header">
+                            <span>Correct Answers</span>
+                            <span id="correctRatio">4/5</span>
+                        </div>
+                        <div class="analysis-bar">
+                            <div id="correctBar" class="analysis-fill green"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-item">
+                        <div class="analysis-header">
+                            <span>Overall Score</span>
+                            <span id="overallScore">85%</span>
+                        </div>
+                        <div class="analysis-bar">
+                            <div id="scoreBar" class="analysis-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="results-actions">
+                    <button id="takeAnotherQuiz" class="action-btn primary">
+                        <i data-feather="rotate-ccw"></i>
+                        <span>Take Another Quiz</span>
+                    </button>
+                    <button id="shareResults" class="action-btn secondary">
+                        <i data-feather="share-2"></i>
+                        <span>Share Results</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>// Quiz Data
+
+</script>
+</body>
+</html>
